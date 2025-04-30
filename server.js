@@ -1,25 +1,33 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
+const express = require("express");
+const http = require("http");
+const socketIo = require("socket.io");
+const cors = require("cors");
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
+const io = socketIo(server, {
+  cors: {
+    origin: "*", // You can restrict this to your Vercel domain later
+    methods: ["GET", "POST"]
+  }
+});
 
-app.use(express.static('public'));
+app.use(cors());
+app.use(express.static("public"));
 
-io.on('connection', (socket) => {
-  console.log('A user connected');
+io.on("connection", (socket) => {
+  console.log("User connected");
 
-  socket.on('chat message', (msg) => {
-    io.emit('chat message', msg);
+  socket.on("chat message", (msg) => {
+    io.emit("chat message", msg);
   });
 
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
   });
 });
 
-server.listen(3000, () => {
-  console.log('Server running at http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
