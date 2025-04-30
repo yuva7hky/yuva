@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io("https://private-chat-e19j.onrender.com");
 const input = document.getElementById('messageInput');
 const messages = document.getElementById('messages');
 
